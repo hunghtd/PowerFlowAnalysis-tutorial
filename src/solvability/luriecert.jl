@@ -134,8 +134,6 @@ function cal_box(R, Δ₁u, Δ₁v, npv, buspJ, basep, v⁰)
         resB[:, k] = -res[[npv+buspJ[1],npv+buspJ[2]]]
     end
     for k in 1:length(buspJ)
-      # resB[k, 1] = exp(log(v⁰[buspJ[k]]) - Δ₁v[buspJ[k],2])^2 * (resB[k, 1] + basep[k]/(v⁰[buspJ[k]])^2) #max
-      # resB[k, 2] = exp(log(v⁰[buspJ[k]]) - Δ₁v[buspJ[k],2])^2 * (-resB[k, 2] + basep[k]/(v⁰[buspJ[k]])^2) #min
       resB[k, 1] = (v⁰[buspJ[k]] - Δ₁v[buspJ[k],2])^2 * (resB[k, 1] + basep[k]/(v⁰[buspJ[k]])^2) #max
       resB[k, 2] = (v⁰[buspJ[k]] - Δ₁v[buspJ[k],2])^2 * (-resB[k, 2] + basep[k]/(v⁰[buspJ[k]])^2) #min
     end
@@ -209,7 +207,7 @@ function add_Δ₁y_constraints_LP(cert::BaseLurieAdCertificate, m::Model, therm
           dVmaxload = Z[p]*Imax[p]/(vt⁰[p]+dV) #max voltage drop %
           dVmaxgen = Z[p]*Imax[p]/vt⁰[p]
 
-          if istobuspq #to bus is a pq bus 1.1 for 39, 1.065 for 57
+          if istobuspq #to bus is a pq bus
               @constraints m begin
                 (1+2*Δ₁ρᵐ[p])*exp(2*ρₑ⁰[p]) - 2*exp(ρₑ⁰[p])*cos(T+Θₑ⁰[p])*(T*(1+Δ₁ρᵐ[p]+ρₑ⁰[p]) + Δ₁Θᵐ[p]*(1+K+ρₑ⁰[p]) - T*(1+K+ρₑ⁰[p])) - 1.2 <= dVmaxload^2
               end
