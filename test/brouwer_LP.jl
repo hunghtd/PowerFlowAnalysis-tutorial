@@ -1,5 +1,4 @@
 include("../src/PowerFlowAnalysis.jl")
-include("../src/degenhunter/DegeneracyHunter.jl")
 
 using JuMP
 using Ipopt
@@ -45,7 +44,6 @@ limitIQ = 1 #if reactive thermal constraints are considered
 mLP = brouwer_certificate_LP(lc, lc.B, lc.C, Qlim, thermalrate, T, K, dV, 100, limitQQ, limitIQ; region=:uniform)
 sol_LP = solve(mLP)
 
-DegeneracyHunter.printVariableDiagnostics(mLP)
 Δ₁u = getvalue(getvariable(mLP, :Δ₁u))
 Δ₁v = getvalue(getvariable(mLP, :Δ₁v))
 
@@ -58,21 +56,4 @@ basep = -sys.p⁰[sys.pq[buspJ]]
 resB = cal_box(R, Δ₁u, Δ₁v, npv, buspJ, basep, v⁰)
 nump = 4
 
-polytop_plot(casename,busp,nump,resB,basep,nb,ratio,thermalrate,dV,stepsize,adaptive,limitQQ,limitIQ,Δ₁u)
-
-# if Δ₁u[1,1] > 0
-#     # polytop_plot_new(casename,busp,nump,resB,basep,nb,ratio,thermalrate,dV,stepsize,adaptive,limitQQ,limitIQ, Δ₁u)
-#     @mput casename busp nump resB basep nb ratio thermalrate dV stepsize adaptive limitQQ limitIQ
-#     eval_string("
-#                 close all
-#                 addpath(genpath('/Users/hunghtd/Dropbox (Personal)/Journal/Feasibility region/matpower6.0b2'));
-#
-#                 resR = constrainedCPF(casename, busp, nump, thermalrate, dV, stepsize, adaptive, limitQQ, limitIQ, 2*pi);
-#
-#                 polytop_plot(resB, resR, basep, busp)
-#
-#                 ")
-# end
-#
-# resB
-# @mget(resR)
+polytope_plot(casename,busp,nump,resB,basep,nb,ratio,thermalrate,dV,stepsize,adaptive,limitQQ,limitIQ,Δ₁u)
