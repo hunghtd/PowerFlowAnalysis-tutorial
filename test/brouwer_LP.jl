@@ -7,7 +7,7 @@ using PowerFlowAnalysis
 using MATLAB
 using PyPlot
 
-casename = "case300"
+casename = "case9"
 case = PowerModels.parse_file(join(["data/", casename, ".m"]))
 pm = ACPPowerModel(case)
 sol = run_ac_pf(case, IpoptSolver())
@@ -18,7 +18,7 @@ lf = LurieFormAd(sys)
 net = Network(pm)
 pqload = sys.p⁰[sys.pq]
 nzload = find(pqload -> pqload < 0, pqload)
-buspJ = nzload[[2,3]]#2, 3 for 300
+buspJ = nzload[[1,2]]#2, 3 for 300
 busp = [net.buses[k] for k in sys.pq[buspJ]]
 
 npv = length(sys.pv)
