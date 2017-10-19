@@ -14,8 +14,6 @@ function brouwer_certificate_LP(sys, B, C, Qlim, thermalrate, T, K, dV, Iter, li
   B⁺,B⁻ = split_matrix(B)
   C⁺,C⁻ = split_matrix(C)
 
-  # m = Model(solver = GurobiSolver(Method=1))
-  # m = Model(solver = GurobiSolver(Method=2,Crossover=0))#MosekSolver(LOG=1), Nodefilestart=0.1,IterationLimit = Iter, OutLev=1)
   m = Model(solver = GurobiSolver(Method=2,Crossover=0, NodefileStart=0.1))#,outlev=1))
 
   @variables m begin
